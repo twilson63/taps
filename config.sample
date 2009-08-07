@@ -1,0 +1,15 @@
+require 'rubygems'
+gem 'sequel', '= 3.0.0'
+gem 'sinatra', '= 0.9.2'
+ 
+require File.dirname(__FILE__) + '/lib/taps/config'
+ 
+Taps::Config.database_url = ENV['DATABASE_URL'] || "mysql://root@localhost/eirene4" # production db
+Taps::Config.taps_database_url = ENV['TAPS_DATABASE_URL'] || "mysql://root@localhost/taps" # db for taps
+ 
+Taps::Config.login = 'myserverlogin'
+Taps::Config.password = 'myserverpassword'
+ 
+require File.dirname(__FILE__) + '/lib/taps/server'
+ 
+run Taps::Server
