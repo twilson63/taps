@@ -14,6 +14,7 @@ module Schema
 		adapter = uri.scheme
 		adapter = 'postgresql' if adapter == 'postgres'
 		adapter = 'sqlite3' if adapter == 'sqlite'
+		adapter = 'mssql' if adapter == 'ado'
 		config = {
 			'adapter' => adapter,
 			'database' => uri.path.blank? ? uri.host : uri.path.split('/')[1],
