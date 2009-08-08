@@ -9,7 +9,7 @@ begin
     s.authors = ["Ricardo Chimal, Jr.", "Adam Wiggins"]
 
     s.add_dependency 'sinatra', '= 0.9.2'
-    s.add_dependency 'activerecord', '= 2.2.2'
+    s.add_dependency 'activerecord', '= 2.3.2'
     s.add_dependency 'thor', '= 0.9.9'
     s.add_dependency 'rest-client', '>= 1.0.1', '< 1.1.0'
     s.add_dependency 'sequel', '>= 3.3.0', '< 3.4.0'
