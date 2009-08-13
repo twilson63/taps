@@ -215,7 +215,7 @@ class ClientSession
 
 				if db.uri.match(/^jdbc:sqlserver/)
 				  begin
-					  db << "SET INDENTITY_INSERT #{table_name} ON"
+					  db << "SET IDENTITY_INSERT #{table_name} ON"
 			  
 				  rescue
 	        end
@@ -226,7 +226,7 @@ class ClientSession
 
         if db.uri.match(/^jdbc:sqlserver/)
           begin
-            db << "SET INDENTITY_INSERT #{table_name} OFF"
+            db << "SET IDENTITY_INSERT #{table_name} OFF"
           rescue
           end
       
