@@ -1,6 +1,8 @@
 #require 'sequel/extensions/migration'
 require 'active_record'
 require 'active_support'
+require 'sequel'
+require 'sequel/extensions/schema_dumper'
 require 'stringio'
 require 'uri'
 
@@ -42,13 +44,16 @@ module Schema
 	end
 
 	def dump(database_url)
-		connection(database_url)
+		# connection(database_url)
+		# 
+		# stream = StringIO.new
+		# ActiveRecord::SchemaDumper.ignore_tables = []
+		# ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+		# stream.string
+    db = Sequel.connect(database_url)
+    db.dump_schema_migration()
 
-		stream = StringIO.new
-    ActiveRecord::SchemaDumper.ignore_tables = []
-    ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
-		stream.string
-	end
+  end
 
 	def dump_without_indexes(database_url)
 		schema = dump(database_url)
@@ -61,11 +66,14 @@ module Schema
 	end
 
 	def indexes(database_url)
-		schema = dump(database_url)
-		schema.split("\n").collect do |line|
-			line if line =~ /^\s+add_index/
-		end.uniq.join("\n")
-	end
+		# schema = dump(database_url)
+		# schema.split("\n").collect do |line|
+		# 	line if line =~ /^\s+add_index/
+		# end.uniq.join("\n")
+    db = Sequel.connect(database_url)
+    db.dump_indexes_migration
+
+  end
 
 	def load(database_url, schema)
 		connection(database_url)
@@ -84,13 +92,13 @@ EORUBY
 	end
 
 	def reset_db_sequences(database_url)
-		connection(database_url)
-
-		if ActiveRecord::Base.connection.respond_to?(:reset_pk_sequence!)
-			ActiveRecord::Base.connection.tables.each do |table|
-				ActiveRecord::Base.connection.reset_pk_sequence!(table)
-			end
-		end
+  	connection(database_url)
+  
+  	if ActiveRecord::Base.connection.respond_to?(:reset_pk_sequence!)
+  		ActiveRecord::Base.connection.tables.each do |table|
+  			ActiveRecord::Base.connection.reset_pk_sequence!(table)
+  		end
+  	end
 	end
 end
 end

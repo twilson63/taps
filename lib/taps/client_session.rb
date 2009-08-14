@@ -1,5 +1,7 @@
 require 'rest_client'
 require 'sequel'
+require 'sequel/extensions/query'
+require 'sequel/extensions/migration'
 require 'zlib'
 
 require File.dirname(__FILE__) + '/progress_bar'
@@ -97,9 +99,11 @@ class ClientSession
 	def cmd_send_schema
 		puts "Sending schema"
 
-		schema_data = Taps::Utils.schema_bin(:dump, database_url)
-		session_resource['schema'].post(schema_data, http_headers)
-	end
+		#schema_data = Taps::Utils.schema_bin(:dump, database_url)
+		#session_resource['schema'].post(schema_data, http_headers)
+	  schema_data = db.dump_schema_migration()
+	  session_resource['schema'].post(schema_data, http_headers)
+  end
 
 	def cmd_send_reset_sequences
 		puts "Resetting sequences"
@@ -209,8 +213,25 @@ class ClientSession
 				end
 				break if rows == { }
 
+				if db.uri.match(/^jdbc:sqlserver/)
+				  begin
+					  db << "SET IDENTITY_INSERT #{table_name} ON"
+			  
+				  rescue
+	        end
+									
+			  end
+				
 				table.import(rows[:header], rows[:data])
 
+        if db.uri.match(/^jdbc:sqlserver/)
+          begin
+            db << "SET IDENTITY_INSERT #{table_name} OFF"
+          rescue
+          end
+      
+        end
+        
 				progress.inc(rows[:data].size)
 				offset += rows[:data].size
 			end
@@ -258,9 +279,22 @@ class ClientSession
 		puts "Receiving schema"
 
 		schema_data = session_resource['schema'].get(http_headers)
+<<<<<<< HEAD:lib/taps/client_session.rb
 		schema_data = schema_data.gsub(/Date\ /, "String ")
 		output = Taps::Utils.load_schema(database_url, schema_data)
 		puts output if output
+=======
+		#output = Taps::Utils.load_schema(database_url, schema_data)
+		#puts schema_data
+		begin
+		  eval(schema_data).apply(db, :down)
+		rescue
+		end
+		
+		eval(schema_data).apply(db, :up)
+		
+		# puts output if output
+>>>>>>> 785f0099a4d444b56c17699c9cb395cbc42c5bc4:lib/taps/client_session.rb
 	end
 
 	def cmd_receive_indexes
@@ -268,15 +302,25 @@ class ClientSession
 
 		index_data = session_resource['indexes'].get(http_headers)
 
-		output = Taps::Utils.load_indexes(database_url, index_data)
-		puts output if output
-	end
+		#output = Taps::Utils.load_indexes(database_url, index_data)
+		#puts output if output
 
+    begin
+      eval(index_data).apply(db, :down)
+    rescue
+    end
+    
+    eval(index_data).apply(db, :up)
+    
+  end
+    
 	def cmd_reset_sequences
 		puts "Resetting sequences"
 
-		output = Taps::Utils.schema_bin(:reset_db_sequences, database_url)
-		puts output if output
+		unless db.uri.match(/^jdbc:sqlserver/)
+		  output = Taps::Utils.schema_bin(:reset_db_sequences, database_url)
+		  puts output if output
+		end
 	end
 
 	def format_number(num)

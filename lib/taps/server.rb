@@ -79,6 +79,8 @@ class Server < Sinatra::Default
 		halt 404 unless session
 
 		schema_app = File.dirname(__FILE__) + '/../../bin/schema'
+    
+  
 		Taps::Utils.schema_bin(:dump, session.database_url)
 	end
 
