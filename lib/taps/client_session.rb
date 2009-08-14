@@ -1,6 +1,6 @@
 require 'rest_client'
 require 'sequel'
-require 'sequel/extensions/query'
+require 'sequel/extensions/schema_dumper'
 require 'sequel/extensions/migration'
 require 'zlib'
 
