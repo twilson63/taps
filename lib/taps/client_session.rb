@@ -279,11 +279,8 @@ class ClientSession
 		puts "Receiving schema"
 
 		schema_data = session_resource['schema'].get(http_headers)
-<<<<<<< HEAD:lib/taps/client_session.rb
 		schema_data = schema_data.gsub(/Date\ /, "String ")
-		output = Taps::Utils.load_schema(database_url, schema_data)
-		puts output if output
-=======
+
 		#output = Taps::Utils.load_schema(database_url, schema_data)
 		#puts schema_data
 		begin
@@ -294,7 +291,6 @@ class ClientSession
 		eval(schema_data).apply(db, :up)
 		
 		# puts output if output
->>>>>>> 785f0099a4d444b56c17699c9cb395cbc42c5bc4:lib/taps/client_session.rb
 	end
 
 	def cmd_receive_indexes
