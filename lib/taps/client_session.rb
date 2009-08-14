@@ -258,6 +258,7 @@ class ClientSession
 		puts "Receiving schema"
 
 		schema_data = session_resource['schema'].get(http_headers)
+		schema_data = schema_data.gsub(/Date\ /, "String ")
 		output = Taps::Utils.load_schema(database_url, schema_data)
 		puts output if output
 	end

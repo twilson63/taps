@@ -1,3 +1,4 @@
+#require 'sequel/extensions/migration'
 require 'active_record'
 require 'active_support'
 require 'stringio'
@@ -44,8 +45,8 @@ module Schema
 		connection(database_url)
 
 		stream = StringIO.new
-		ActiveRecord::SchemaDumper.ignore_tables = []
-		ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+    ActiveRecord::SchemaDumper.ignore_tables = []
+    ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
 		stream.string
 	end
 
