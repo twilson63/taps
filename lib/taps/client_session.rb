@@ -284,7 +284,9 @@ class ClientSession
 		#output = Taps::Utils.load_schema(database_url, schema_data)
 		#puts schema_data
 		begin
-		  eval(schema_data).apply(db, :down)
+      eval(db.dump_schema_migration()).apply(db, :down)
+      
+		  #eval(schema_data).apply(db, :down)
 		rescue
 		end
 		

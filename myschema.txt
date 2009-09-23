@@ -1,0 +1,1343 @@
+Class.new(Sequel::Migration) do
+  def up
+    create_table(:allergies) do
+      primary_key :id
+      Integer :patient_id
+      Integer :encounter_id
+      String :name
+      Integer :concepttype
+      String :conceptid
+      String :onset_at
+      DateTime :created_at
+      DateTime :updated_at
+      String :note, :text=>true
+    end
+    
+    create_table(:ama_icd9s) do
+      primary_key :id
+      String :code
+      String :code_status
+      String :short
+      String :medium
+      String :long
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:avatars) do
+      primary_key :id
+      String :name
+      DateTime :created_at
+      DateTime :updated_at
+      String :parent
+      Integer :parent_id
+    end
+    
+    create_table(:billing_items) do
+      primary_key :id
+      Integer :encounter_id
+      String :cpt_code
+      String :modifier
+      BigDecimal :price, :size=>[10, 2]
+      Integer :units
+      String :icd9one
+      String :icd9two
+      String :icd9three
+      String :icd9four
+      DateTime :created_at
+      DateTime :updated_at
+      String :cpt_description
+      String :description
+      Integer :selected
+      String :billing_type
+      String :icd9s_text
+      String :code
+    end
+    
+    create_table(:call_lists) do
+      primary_key :id
+      Integer :user_id
+      Integer :patient_id
+      String :workflow_state
+      String :comment
+      DateTime :created_at
+      DateTime :updated_at
+      String :call_outcome
+      TrueClass :follow_up_yn, :default=>false
+      String :follow_up_date
+    end
+    
+    create_table(:check_messages) do
+      primary_key :id
+      Integer :user_id
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:consult_orders) do
+      primary_key :id
+      Integer :patient_id
+      String :order_date
+      Integer :referring_provider_id
+      Integer :consultant_id
+      String :name
+      String :diagnosis
+      String :icd9
+      String :description, :text=>true
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:consultants) do
+      primary_key :id
+      String :last_name
+      String :first_name
+      String :salutation
+      String :suffix
+      String :specialty
+      String :npi
+      String :address
+      String :address2
+      String :city
+      String :state
+      String :zip
+      String :phone
+      String :fax
+      String :email
+      String :comments, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      TrueClass :delta
+      Integer :avatar_id
+    end
+    
+    create_table(:cpts) do
+      primary_key :id
+      String :code
+      String :modifier
+      String :short
+      String :medium
+      String :long, :text=>true
+      String :work_rvu
+      String :facility_rvu
+      String :nfacility_rvu
+      String :pli_rvu
+      String :total_facility_rvu
+      String :total_non_facility_rvu
+      String :global_period
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:documents) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      String :document_date
+      String :document_type
+      String :description, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      String :content_type
+      Integer :user_id
+      String :filename
+    end
+    
+    create_table(:encounter_assessment_plan_items) do
+      primary_key :id
+      Integer :encounter_id
+      String :diagnosis
+      String :plan
+      DateTime :created_at
+      DateTime :updated_at
+      String :icd9
+      String :priority
+      Integer :selected
+      String :code
+    end
+    
+    create_table(:encounter_family_diseases) do
+      primary_key :id
+      Integer :encounter_id
+      String :name
+      String :relationship
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_family_histories) do
+      primary_key :id
+      Integer :encounter_id
+      String :relationship
+      Integer :age
+      String :state_of_health
+      Integer :age_at_death
+      String :cause_of_death
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_habits) do
+      primary_key :id
+      Integer :encounter_id
+      String :name
+      String :frequency
+      String :description
+      DateTime :created_at
+      DateTime :updated_at
+      String :units
+    end
+    
+    create_table(:encounter_hospitalizations) do
+      primary_key :id
+      Integer :encounter_id
+      String :year
+      String :hospital
+      String :reason
+      String :outcome
+      DateTime :created_at
+      DateTime :updated_at
+      String :visit_type
+    end
+    
+    create_table(:encounter_illness_histories) do
+      primary_key :id
+      Integer :encounter_id
+      String :name
+      String :illness_date
+      String :outcome
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_notes) do
+      primary_key :id
+      Integer :encounter_id
+      String :section
+      String :code
+      String :note, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_physical_exam_items) do
+      primary_key :id
+      Integer :encounter_id
+      String :system
+      String :description
+      String :result
+      DateTime :created_at
+      DateTime :updated_at
+      String :code
+    end
+    
+    create_table(:encounter_physical_exam_systems) do
+      primary_key :id
+      Integer :encounter_id
+      String :name
+      String :comments, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_pregnancy_histories) do
+      primary_key :id
+      Integer :encounter_id
+      String :year
+      String :complication
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_procedures) do
+      primary_key :id
+      Integer :encounter_id
+      String :cpt_code
+      String :name
+      String :description
+      String :icd9
+      String :dx
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :performed
+    end
+    
+    create_table(:encounter_recommendations) do
+      primary_key :id
+      String :subject
+      String :description, :text=>true
+      Integer :encounter_id
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:encounter_ros_items) do
+      primary_key :id
+      String :system
+      String :issue
+      String :past
+      String :current
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :encounter_id
+      String :review_value
+      Integer :encounter_ros_system_id
+      String :code
+    end
+    
+    create_table(:encounter_ros_systems) do
+      primary_key :id
+      Integer :encounter_id
+      String :name
+      Integer :document_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :comments, :text=>true
+    end
+    
+    create_table(:encounters) do
+      primary_key :id
+      String :encounter_date
+      DateTime :start_time
+      DateTime :stop_time
+      String :chief_complaints
+      String :visit_cpt
+      Integer :patient_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :workflow_state
+      String :place_of_service
+      String :decision_making
+      Integer :provider_id
+      String :dx_related_to_employment
+      String :dx_related_to_auto_accident
+      String :auto_accident_state
+      String :dx_related_to_other_accident
+      String :prior_auth
+      String :hpi, :text=>true
+      String :hpi_type
+      Integer :event_id
+      String :assessment_plan_summary, :text=>true
+      String :submit_price
+      BigDecimal :primary_paid, :size=>[18, 2]
+      BigDecimal :secondary_paid, :size=>[18, 2]
+      BigDecimal :patient_paid, :size=>[18, 2]
+      String :primary_invoice
+      String :secondary_invoice
+      String :patient_invoice
+      TrueClass :signficant_findings_only
+      Integer :significant_findings_only
+      Integer :billing_reviewer_id
+      String :ros_comments, :text=>true
+      String :pe_comments, :text=>true
+      Integer :ros_no_changes
+      Integer :pe_no_changes
+      Integer :verified_address
+      Integer :verified_insurance
+      Integer :verified_hospitalizations
+      Integer :verified_medications
+      Integer :verified_problems
+      Integer :verified_allergies
+      Integer :verified_habits
+      Integer :verified_illnesses
+      Integer :verified_pregnancies
+      Integer :verified_family_hx
+      Integer :verified_family_dx
+      Integer :encounter_note
+      String :billing_note, :text=>true
+    end
+    
+    create_table(:events) do
+      primary_key :id
+      String :name
+      String :description, :text=>true
+      String :event_date
+      Integer :provider_id
+      Integer :patient_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :scheduler_id
+      Integer :er_hospital_visits
+      Integer :organization_id
+    end
+    
+    create_table(:fax_dispositions) do
+      primary_key :id
+      Integer :fax_id
+      Integer :efax_id
+      String :fax_number
+      DateTime :completion_date
+      Integer :fax_status
+      String :recipient_csid
+      String :duration
+      Integer :pages
+      Integer :number_of_retries
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :fax_outbound_id
+    end
+    
+    create_table(:fax_files) do
+      primary_key :id
+      String :name
+      String :file_type
+      String :location
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :fax_inbound_id
+      Integer :fax_outbound_id
+    end
+    
+    create_table(:fax_inbounds) do
+      primary_key :id
+      String :description
+      Integer :pages
+      Integer :external_fax_id
+      Integer :patient_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :fax_number
+    end
+    
+    create_table(:fax_outbounds) do
+      primary_key :id
+      String :recipient_name
+      String :fax_number
+      String :file_name
+      String :subject
+      String :note, :text=>true
+      Integer :pages
+      Integer :external_fax_id
+      Integer :patient_id
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :fax_source_id
+      String :fax_source_type
+      Integer :organization_id
+      Integer :fax_by_user_id
+      String :workflow_state
+    end
+    
+    create_table(:fax_recipients) do
+      primary_key :id
+      Integer :fax_id
+      String :name
+      String :recipient_type
+      Integer :recipient_id
+      String :fax_number
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:fax_settings) do
+      primary_key :id
+      Integer :practice_id
+      String :type
+      String :username
+      String :password
+      Integer :enabled
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:faxes) do
+      primary_key :id
+      String :description
+      Integer :pages
+      String :workflow_state
+      TrueClass :delta
+      DateTime :created_at
+      DateTime :updated_at
+      String :efax_id
+      String :fax_type
+    end
+    
+    create_table(:fdb_meds, :ignore_index_errors=>true) do
+      primary_key :id
+      Integer :rmid
+      String :name
+      String :description
+      DateTime :created_at
+      DateTime :updated_at
+      
+      index [:name], :name=>:index_fdb_meds_on_name, :unique=>true
+    end
+    
+    create_table(:geocodes, :ignore_index_errors=>true) do
+      primary_key :id
+      BigDecimal :latitude, :size=>[15, 12]
+      BigDecimal :longitude, :size=>[15, 12]
+      String :query
+      String :street
+      String :locality
+      String :region
+      String :postal_code
+      String :country
+      String :precision
+      
+      index [:country]
+      index [:latitude]
+      index [:locality]
+      index [:longitude]
+      index [:postal_code]
+      index [:precision]
+      index [:query], :unique=>true
+      index [:region]
+    end
+    
+    create_table(:geocodings, :ignore_index_errors=>true) do
+      primary_key :id
+      Integer :geocodable_id
+      Integer :geocode_id
+      String :geocodable_type
+      
+      index [:geocodable_id]
+      index [:geocodable_type]
+      index [:geocode_id]
+    end
+    
+    create_table(:help_pages) do
+      primary_key :id
+      String :name
+      String :body, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:helps) do
+      primary_key :id
+      String :subject
+      String :body, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:lab_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :referring_provider_id
+      String :order_date
+      String :description, :text=>true
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :consultant_id
+    end
+    
+    create_table(:lab_tests) do
+      primary_key :id
+      Integer :patient_id
+      String :date_written
+      String :name
+      String :code
+      String :icd9
+      String :workflow_state
+      Integer :provider_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :problem_name
+      Integer :lab_order_id
+    end
+    
+    create_table(:macro_exams) do
+      primary_key :id
+      String :location
+      String :description
+      String :status
+      String :note, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:macro_ro_systems) do
+      primary_key :id
+      String :system_text
+      String :description
+      String :code
+      String :note, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:macros) do
+      primary_key :id
+      String :section
+      String :code
+      String :note
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:manifest_items) do
+      primary_key :id
+      Integer :manifest_id
+      Integer :patient_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:manifests) do
+      primary_key :id
+      Integer :provider_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:medication_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :patient_medication_id
+      Integer :provider_id
+      Integer :encounter_id
+      String :qty
+      String :fills
+      String :directions
+      String :workflow_state
+      String :medication_change
+      String :written_date
+      DateTime :created_at
+      DateTime :updated_at
+      String :change_medication
+    end
+    
+    create_table(:medications) do
+      primary_key :id
+      Integer :patient_id
+      Integer :drug_id
+      String :name
+      String :dose
+      String :route
+      String :frequency
+      Integer :problem_id
+      String :workflow_state
+      Integer :encounter_id
+      String :start_date
+      String :end_date
+      DateTime :created_at
+      DateTime :updated_at
+      String :problem_name
+      String :problem_code
+      String :discontinue_reason
+      Integer :user_id
+    end
+    
+    create_table(:messages) do
+      primary_key :id
+      String :to
+      Integer :user_id
+      String :body, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :encounter_id
+      String :name
+      String :body, :text=>true
+      Integer :provider_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:organizations) do
+      primary_key :id
+      String :name
+      String :phone
+      String :address
+      String :address2
+      String :city
+      String :state
+      String :zip
+      String :org_type
+      String :comments, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      String :contact
+      TrueClass :delta
+      String :fax
+      String :logo_image
+      TrueClass :print_logo
+      String :ncpdpid
+      Integer :avatar_id
+      String :color
+    end
+    
+    create_table(:patient_alerts) do
+      primary_key :id
+      String :name
+      String :description
+      String :level
+      String :comments, :text=>true
+      String :document_name
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_allergies) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      Integer :concept_type
+      String :concept_id
+      String :onset_at
+      String :note, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_assessment_items) do
+      primary_key :id
+      Integer :patient_assessment_id
+      String :description
+      String :result
+      String :item_type
+      String :note, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_assessments) do
+      primary_key :id
+      Integer :patient_id
+      Integer :user_id
+      String :recorded_date
+      String :assessment_type
+      String :overall_score
+      String :summary, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_consult_order_problems) do
+      primary_key :id
+      Integer :patient_consult_order_id
+      Integer :patient_problem_id
+      String :icd9
+      String :name
+      Integer :selected
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_consult_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :referring_provider_id
+      String :order_date
+      String :name
+      String :description, :text=>true
+      Integer :consultant_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :workflow_state
+    end
+    
+    create_table(:patient_contacts) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      String :phone
+      String :contact_type
+      String :comments
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_family_diseases) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      String :relationship
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_family_histories) do
+      primary_key :id
+      String :relationship
+      String :age
+      String :state_of_health
+      String :age_of_death
+      String :cause_of_death
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :patient_id
+    end
+    
+    create_table(:patient_habits) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      DateTime :created_at
+      DateTime :updated_at
+      String :quantity
+      String :units
+      String :frequency
+      String :description
+    end
+    
+    create_table(:patient_hospitalizations) do
+      primary_key :id
+      String :hospital
+      String :visit_type
+      String :reason
+      String :outcome
+      Integer :patient_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :year
+    end
+    
+    create_table(:patient_hospitals) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      String :occured_at
+      String :reason
+      String :visit_type
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_illnesses) do
+      primary_key :id
+      Integer :patient_id
+      String :name
+      String :illness_date
+      String :outcome
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_insurances) do
+      primary_key :id
+      Integer :patient_id
+      String :patient_insurance_type
+      String :group_no
+      String :id_no
+      String :copay
+      String :patient_relationship
+      String :insurer_name
+      String :insurer_dob
+      String :address
+      String :address2
+      String :city
+      String :state
+      String :zip
+      String :phone
+      String :notes, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :payer_id
+      String :plan_name
+      String :insurer_gender
+      String :employer_name
+      String :description
+      String :patient_insurance_priority
+    end
+    
+    create_table(:patient_internal_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :provider_id
+      Integer :order_completer_id
+      String :name
+      String :description, :text=>true
+      String :comments, :text=>true
+      String :order_date
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_lab_order_problems) do
+      primary_key :id
+      Integer :patient_lab_order_id
+      Integer :patient_problem_id
+      String :icd9
+      String :name
+      Integer :selected
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_lab_order_tests) do
+      primary_key :id
+      Integer :patient_lab_order_id
+      String :date_written
+      Integer :selected
+      String :name
+      String :code
+      String :result
+      String :result_recorded_at
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_lab_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :referring_provider_id
+      String :order_date
+      String :description
+      Integer :consultant_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :name
+      String :workflow_state
+    end
+    
+    create_table(:patient_letter_problems) do
+      primary_key :id
+      Integer :patient_letter_id
+      Integer :patient_problem_id
+      String :icd9
+      String :name
+      Integer :selected
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_letters) do
+      primary_key :id
+      Integer :patient_id
+      Integer :referring_provider_id
+      String :order_date
+      String :name
+      String :description, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      String :workflow_state
+    end
+    
+    create_table(:patient_medications) do
+      primary_key :id
+      Integer :patient_id
+      Integer :drug_id
+      String :name
+      String :dose
+      String :route
+      String :frequency
+      Integer :problem_id
+      String :workflow_state
+      String :start_date
+      String :end_date
+      String :problem_name
+      String :problem_code
+      String :discontinue_reason
+      Integer :user_id
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_notes) do
+      primary_key :id
+      Integer :user_id
+      Integer :patient_id
+      String :subject
+      String :body, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      TrueClass :delta
+    end
+    
+    create_table(:patient_pharmd_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :provider_id
+      Integer :order_completer_id
+      String :name
+      String :description, :text=>true
+      String :comments, :text=>true
+      String :order_date
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_pregnancies) do
+      primary_key :id
+      Integer :patient_id
+      String :pregnancy_date
+      String :complication
+      String :comments
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_problems) do
+      primary_key :id
+      Integer :patient_id
+      String :icd9
+      String :name
+      String :onset_at
+      String :resolution_at
+      String :priority
+      String :note, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :primary_dx
+    end
+    
+    create_table(:patient_vaccines) do
+      primary_key :id
+      Integer :patient_id
+      String :administered_on
+      String :name
+      String :sequence
+      String :body_site
+      String :volume
+      String :route
+      String :lot_no
+      String :manufacturer
+      String :expires_on
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_xray_order_problems) do
+      primary_key :id
+      Integer :patient_xray_order_id
+      Integer :patient_problem_id
+      String :icd9
+      String :name
+      Integer :selected
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:patient_xray_order_tests) do
+      primary_key :id
+      Integer :patient_xray_order_id
+      Integer :selected
+      String :name
+      String :code
+      String :result
+      String :result_recorded
+      DateTime :created_at
+      DateTime :updated_at
+      String :system
+      String :test
+    end
+    
+    create_table(:patient_xray_orders) do
+      primary_key :id
+      Integer :patient_id
+      Integer :referring_provider_id
+      String :order_date
+      String :name
+      String :description, :text=>true
+      Integer :consultant_id
+      DateTime :created_at
+      DateTime :updated_at
+      String :workflow_state
+    end
+    
+    create_table(:patients) do
+      primary_key :id
+      String :last_name
+      String :first_name
+      String :mi
+      String :salutation
+      String :suffix
+      String :dob
+      String :gender
+      String :ssn
+      String :address
+      String :address2
+      String :city
+      String :state
+      String :zip
+      String :home_phone
+      String :work_phone
+      String :cell_phone
+      String :email
+      String :marital_status
+      String :partner_name
+      String :employer
+      Integer :provider_id
+      Integer :pharmacy_id
+      Integer :referral_provider_id
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :practice_id
+      String :comments, :text=>true
+      String :language
+      String :ethnicity
+      String :religion
+      String :workflow_state
+      String :residence
+      String :admission_date
+      String :employment_status
+      String :lat
+      String :lng
+      TrueClass :delta
+      Integer :organization_id
+      String :room
+      String :care_type
+      TrueClass :organ_donor
+      TrueClass :advanced_directives
+      TrueClass :poa
+      TrueClass :dpoa
+      TrueClass :living_will
+      TrueClass :dnr
+      String :discharged_reason
+      String :referral_date
+      Integer :avatar_id
+      String :medicare_no
+    end
+    
+    create_table(:payers) do
+      primary_key :id
+      String :name
+      String :gatewayedi_id
+      TrueClass :claims
+      TrueClass :remittance_advice
+      TrueClass :rt_eligibility
+      TrueClass :electronic_cob
+      TrueClass :rt_claim_status
+      TrueClass :enrollment_required
+      String :contact
+      String :phone
+      String :website
+      String :servicing_states
+      String :additional_info
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:payers_practices) do
+      primary_key :id
+      String :payer_id
+      String :practice_id
+    end
+    
+    create_table(:payers_users) do
+      primary_key :id
+      Integer :payer_id
+      Integer :user_id
+      String :npi
+      String :other
+      String :other_type
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:physical_exam_items) do
+      primary_key :id
+      Integer :encounter_id
+      String :system
+      String :description
+      String :result
+      String :note
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :physical_exam_system_id
+    end
+    
+    create_table(:physical_exam_systems) do
+      primary_key :id
+      Integer :encounter_id
+      String :name
+      String :comments, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :document_id
+    end
+    
+    create_table(:practices) do
+      primary_key :id
+      String :name
+      String :address
+      String :address2
+      String :city
+      String :state
+      String :zip
+      String :phone
+      String :fax
+      String :ein
+      String :npi
+      String :clia
+      DateTime :created_at
+      DateTime :updated_at
+      String :logo_image
+      TrueClass :print_logo
+    end
+    
+    create_table(:problems) do
+      primary_key :id
+      Integer :patient_id
+      Integer :encounter_id
+      String :icd9
+      String :name
+      String :onset_at
+      String :resolution_at
+      DateTime :created_at
+      DateTime :updated_at
+      String :priority
+      String :note, :text=>true
+    end
+    
+    create_table(:referral_providers) do
+      primary_key :id
+      String :last_name
+      String :first_name
+      String :salutation
+      String :suffix
+      String :specialty
+      String :npi
+      String :address
+      String :address2
+      String :city
+      String :state
+      String :zip
+      String :phone
+      String :fax
+      String :email
+      String :comments, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+      String :other_type
+      String :other_number
+      TrueClass :delta
+      Integer :avatar_id
+    end
+    
+    create_table(:reminders) do
+      primary_key :id
+      Integer :provider_id
+      String :alarm_date
+      String :name
+      String :description
+      Integer :patient_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:reports) do
+      primary_key :id
+      String :name
+      Integer :user_id
+      String :parameters, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:roles) do
+      primary_key :id
+      String :name
+    end
+    
+    create_table(:roles_users, :ignore_index_errors=>true) do
+      Integer :role_id
+      Integer :user_id
+      
+      index [:role_id], :name=>:index_roles_users_on_role_id
+      index [:user_id], :name=>:index_roles_users_on_user_id
+    end
+    
+    create_table(:schema_migrations, :ignore_index_errors=>true) do
+      String :version, :null=>false
+      
+      primary_key [:version]
+      
+      index [:version], :name=>:unique_schema_migrations, :unique=>true
+    end
+    
+    create_table(:scripts) do
+      primary_key :id
+      Integer :patient_id
+      Integer :medication_id
+      String :script_date
+      String :sig
+      String :qty
+      String :refills
+      String :directions, :text=>true
+      String :med_id
+      Integer :encounter_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+      Integer :provider_id
+      TrueClass :new_rx
+    end
+    
+    create_table(:sure_scripts) do
+      primary_key :id
+      String :message_class_id
+      String :name
+      String :type
+      String :status
+      String :to
+      String :from
+      String :relates_to_msg
+      DateTime :sent_at
+      String :sms_version
+      String :vendor
+      String :app_name
+      String :app_version
+      String :body, :text=>true
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:taggings, :ignore_index_errors=>true) do
+      primary_key :id
+      Integer :tag_id
+      Integer :taggable_id
+      Integer :tagger_id
+      String :tagger_type
+      String :taggable_type
+      String :context
+      DateTime :created_at
+      
+      index [:tag_id], :name=>:index_taggings_on_tag_id
+      index [:taggable_id, :taggable_type, :context], :name=>:index_taggings_on_taggable_id_and_taggable_type_and_context
+    end
+    
+    create_table(:tags) do
+      primary_key :id
+      String :name
+    end
+    
+    create_table(:test_results) do
+      primary_key :id
+      Integer :lab_test_id
+      String :name
+      String :result
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:tool_links) do
+      primary_key :id
+      String :name
+      String :path
+      Integer :practice_id
+      Integer :user_id
+      DateTime :created_at
+      DateTime :updated_at
+    end
+    
+    create_table(:user_offline_patients) do
+      primary_key :id
+      Integer :patient_id
+      Integer :user_id
+      String :workflow_state
+      DateTime :created_at
+      DateTime :updated_at
+    end
+  end
+  
+  def down
+    drop_table(:allergies, :ama_icd9s, :avatars, :billing_items, :call_lists, :check_messages, :consult_orders, :consultants, :cpts, :documents, :encounter_assessment_plan_items, :encounter_family_diseases, :encounter_family_histories, :encounter_habits, :encounter_hospitalizations, :encounter_illness_histories, :encounter_notes, :encounter_physical_exam_items, :encounter_physical_exam_systems, :encounter_pregnancy_histories, :encounter_procedures, :encounter_recommendations, :encounter_ros_items, :encounter_ros_systems, :encounters, :events, :fax_dispositions, :fax_files, :fax_inbounds, :fax_outbounds, :fax_recipients, :fax_settings, :faxes, :fdb_meds, :geocodes, :geocodings, :help_pages, :helps, :lab_orders, :lab_tests, :macro_exams, :macro_ro_systems, :macros, :manifest_items, :manifests, :medication_orders, :medications, :messages, :orders, :organizations, :patient_alerts, :patient_allergies, :patient_assessment_items, :patient_assessments, :patient_consult_order_problems, :patient_consult_orders, :patient_contacts, :patient_family_diseases, :patient_family_histories, :patient_habits, :patient_hospitalizations, :patient_hospitals, :patient_illnesses, :patient_insurances, :patient_internal_orders, :patient_lab_order_problems, :patient_lab_order_tests, :patient_lab_orders, :patient_letter_problems, :patient_letters, :patient_medications, :patient_notes, :patient_pharmd_orders, :patient_pregnancies, :patient_problems, :patient_vaccines, :patient_xray_order_problems, :patient_xray_order_tests, :patient_xray_orders, :patients, :payers, :payers_practices, :payers_users, :physical_exam_items, :physical_exam_systems, :practices, :problems, :referral_providers, :reminders, :reports, :roles, :roles_users, :schema_migrations, :scripts, :sure_scripts, :taggings, :tags, :test_results, :tool_links, :user_offline_patients)
+  end
+end
